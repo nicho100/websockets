@@ -8,8 +8,19 @@ data.forEach(message => {
 document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`
 })
 
-
-
+let prod=[]
+socket.on("product",(data)=>{
+    prod =data
+    for(let i=0;i<prod.lenght;i++){
+     html=html +`
+     <tr>
+    <td>${prod[i].name}></td>
+    <td><${prod[i].price}></td>
+    <td><img src=<${prod[i].thumbnail}></td>
+    </tr>`   
+    }
+   document.querySelector("#product").innerHTML=html 
+})
 
 socket.on("messageAdded",(message)=>{
     html=`${html}
@@ -22,4 +33,12 @@ function sendMessage(that){
         date:new Date().toLocaleString()
     }
     socket.emit("newMessage",message)
+}
+function addProduct(that){
+    const message={
+        name:that.name.value,
+        price:that.price.value,
+        thumbnail:that.thumbnail.value
+    }
+    socket.emit("newProduct",message)
 }
