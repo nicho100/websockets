@@ -10,7 +10,8 @@ document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`
 
 let prod=[]
 socket.on("product",(data)=>{
-    prod =data
+    let html=""
+    prod = data
     for(let i=0;i<prod.lenght;i++){
      html=html +`
      <tr>
@@ -23,9 +24,20 @@ socket.on("product",(data)=>{
 })
 
 socket.on("messageAdded",(message)=>{
+    let html=""
     html=`${html}
     <li><em>${message.email}</em>:${message.text}</li>`
 })
+socket.on("productAdded",(product)=>{
+    let html=""
+    html=`${html}
+    <tr>
+    <td>${product.name}></td>
+    <td><${product.price}></td>
+    <td><img src=<${product.thumbnail}></td>
+    </tr>`
+})
+
 function sendMessage(that){
     const message={
         email:that.email.value,
@@ -35,10 +47,10 @@ function sendMessage(that){
     socket.emit("newMessage",message)
 }
 function addProduct(that){
-    const message={
+    const product={
         name:that.name.value,
         price:that.price.value,
         thumbnail:that.thumbnail.value
     }
-    socket.emit("newProduct",message)
+    socket.emit("newProduct",product)
 }
