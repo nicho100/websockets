@@ -5,17 +5,16 @@
 <body>
     
     <div class="contenedor">
-        <form onsubmit="sendMessage(this)">
+        <form id="messageForm">
             <div class="mb-3">
                 <label for="email" class="form-label">Email:</label>
                 <input type="text" class="form-control" id="email" name="email" aria-describedby="email">
             </div>
-            <div id="chats"></div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>
                 <input type="text" class="form-control" id="message" name="message"aria-describedby="message">
             </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" onclick="sendMessage(messageForm)" class="btn btn-primary">Submit</button>
 </form>
 <div id="chatContent">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
