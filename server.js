@@ -13,7 +13,7 @@ app.set('views', './public')
 app.set('view engine', 'ejs')
 const fs=require('fs')
 
-class contenedor3{
+class contenedor{
   constructor(archivo){
       this.archivo=`./${archivo}.txt`
       this.id=1
@@ -104,83 +104,39 @@ class contenedor3{
   }//funciona
 
 }
-class contenedor{
-    constructor(){
-        this.productos=[]
-        this.id=1
-        
-    }
-
-    save(object){
-        //traer el contenido del archivo y preguntar si tiene algo,si no se pone objet id en 1
-        //si hay contenido se recorre y se guarda el id del ultimo y se le suma uno y al objeto.id se le asigna lo guardad
-            
-        object.id=this.id
-        this.productos.push(object)
-        this.id++
-        return this.id
-        
-    }
-    getbyid(number){
-        let resultado=null
-              let bandera=0
-              for(let i = 0;i <this.productos.length;i++){
-              if (info[i].id==number){
-                resultado = this.productos[i]
-                bandera=1
-                }} 
-              if (bandera===0){
-                resultado=null      
-              }
-              
-           return resultado
-    }//funciona
-    getAll(){
-      return this.productos
-    }//funciona
-    deleteById(number){
-         let bandera=-1
-        for(let i = 0;i <this.productos.length;i++){
-             if (this.productos[i].id===number){
-                this.productos.splice(i,1)
-                bandera=1
-                }
-         }if (bandera===-1){
-            console.log("el elemento no se encuentra en el array")
-            }
-    }//funciona
-    deleteAll(){
-    this.productos=[]
-    }//funciona
-
-}
 
 const apiClass= new contenedor("ejemplo")
 const chat= new contenedor("chats")
-chat.save({
-    email: "nico@email",
-    message: "hola" 
-})
-app.get('/productos',(req,res)=>{
-const produc= apiClass.getAll()
+ 
+app.get('/productos',async (req,res)=>{
+const produc=await apiClass.getAll()
   res.render('form.ejs',{produc})
   //res.render('chat.ejs',{produc})
 })
-
-app.post('/productos',(req, res)=>{
+/*
+app.post('/productos',async(req, res)=>{
     //console.log(req.body)
-    apiClass.save(req.body)
-    //let productos=await apiClass.getAll()
-    //console.log(productos)
+    await apiClass.save(req.body)
+    let productos=await apiClass.getAll()
+    console.log(productos)
     res.redirect('/productos')
 })
+*/
 
-io.on('connection',(client) => {
+io.on('connection',async(client) => {
+    const produc=await apiClass.getAll()
+    const menssages=await apiClass.getAll()
     console.log("cliente se conecto")
-    client.emit("messages",chat)
+    client.emit("messages",menssages)
+    client.emit("products",produc)
+    
     client.on("newMessage",async(msg)=>{
-        chat.save(msg)
+        await chat.save(msg)
         io.sockets.emit("messageAdded",msg)
+    })
+    client.on("newProduct",async(pro)=>{
+        await apiClass.save(pro)
+        io.sockets.emit("productAdded",pro)
     })
  });
  server.listen(8080,(req,res)=>{
