@@ -3,7 +3,7 @@ socket.on("messages",data=>{
 let html=""
 data.forEach(message => {
  html= `${html}
-<li><em>${message.email}</em>:${message.text}</li>`
+<li><b style="color:blue">${message.email}</b>[<em style="color:brown">${message.date}</em>]:<em style="color:green">${message.message}</em></li>`
 });
 document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`
 })
