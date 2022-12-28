@@ -12,7 +12,7 @@ const io =socketIo(server)
 app.set('views', './public')
 app.set('view engine', 'ejs')
 const fs=require('fs')
-
+//crear la clase
 class contenedor{
   constructor(archivo){
       this.archivo=`./${archivo}.txt`
@@ -113,30 +113,28 @@ const produc=await apiClass.getAll()
   res.render('form.ejs',{produc})
   //res.render('chat.ejs',{produc})
 })
-/*
-app.post('/productos',async(req, res)=>{
-    //console.log(req.body)
-    await apiClass.save(req.body)
-    let productos=await apiClass.getAll()
-    console.log(productos)
-    res.redirect('/productos')
-})
-*/
+
+
 
 io.on('connection',async(client) => {
-    const produc=await apiClass.getAll()
-    const menssages=await apiClass.getAll()
+    const produc=await apiClass.getAll()//guardo todos los productos y mensajes en una variable
+    const messages=await chat.getAll()
     console.log("cliente se conecto")
-    client.emit("messages",menssages)
+    client.emit("messages",messages)//emito al cliente los mensajes y productos
     client.emit("products",produc)
     
+    //escucho el nuevo mensaje recibido del cliente, lo guardo en una variable con el resto de los mensajes y lo emito a todos
     client.on("newMessage",async(msg)=>{
         await chat.save(msg)
-        io.sockets.emit("messageAdded",msg)
+        const messages=await chat.getAll()
+        io.sockets.emit("messageAdded",messages)
+        console.log(msg)
     })
+    //escucho el nuevo producto recibido del cliente, lo guardo en una variable con el resto de los productos y lo emito a todos
     client.on("newProduct",async(pro)=>{
         await apiClass.save(pro)
-        io.sockets.emit("productAdded",pro)
+        const produc=await apiClass.getAll()
+        io.sockets.emit("productAdded",produc)
     })
  });
  server.listen(8080,(req,res)=>{
