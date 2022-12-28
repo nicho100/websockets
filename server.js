@@ -114,26 +114,26 @@ const produc=await apiClass.getAll()
   //res.render('chat.ejs',{produc})
 })
 
-
+const produc=await apiClass.getAll()//guardo todos los productos y mensajes en una variable
+    const messages=await chat.getAll()
 
 io.on('connection',async(client) => {
-    const produc=await apiClass.getAll()//guardo todos los productos y mensajes en una variable
-    const messages=await chat.getAll()
+   
     console.log("cliente se conecto")
     client.emit("messages",messages)//emito al cliente los mensajes y productos
     client.emit("products",produc)
     
     //escucho el nuevo mensaje recibido del cliente, lo guardo en una variable con el resto de los mensajes y lo emito a todos
     client.on("newMessage",async(msg)=>{
-        await chat.save(msg)
-        const messages=await chat.getAll()
+        await messages.save(msg)
+        await messages.getAll()
         io.sockets.emit("messageAdded",messages)
         console.log(msg)
     })
     //escucho el nuevo producto recibido del cliente, lo guardo en una variable con el resto de los productos y lo emito a todos
     client.on("newProduct",async(pro)=>{
-        await apiClass.save(pro)
-        const produc=await apiClass.getAll()
+        await produc.save(pro)
+        await produc.getAll()
         io.sockets.emit("productAdded",produc)
     })
  });
