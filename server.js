@@ -125,15 +125,15 @@ io.on('connection',async(client) => {
     
     //escucho el nuevo mensaje recibido del cliente, lo guardo en una variable con el resto de los mensajes y lo emito a todos
     client.on("newMessage",async(msg)=>{
-        await messages.save(msg)
-        await messages.getAll()
+        await chat.save(msg)
+        const messages=await chat.getAll()
         io.sockets.emit("messageAdded",messages)
         console.log(msg)
     })
     //escucho el nuevo producto recibido del cliente, lo guardo en una variable con el resto de los productos y lo emito a todos
     client.on("newProduct",async(pro)=>{
-        await produc.save(pro)
-        await produc.getAll()
+        await apiClass.save(pro)
+        const produc=await apiClass.getAll()
         io.sockets.emit("productAdded",produc)
     })
  });
