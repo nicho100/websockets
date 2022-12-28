@@ -114,11 +114,11 @@ const produc=await apiClass.getAll()
   //res.render('chat.ejs',{produc})
 })
 
-const produc=await apiClass.getAll()//guardo todos los productos y mensajes en una variable
-    const messages=await chat.getAll()
+
 
 io.on('connection',async(client) => {
-   
+    const produc=await apiClass.getAll()//guardo todos los productos y mensajes en una variable
+    const messages=await chat.getAll()
     console.log("cliente se conecto")
     client.emit("messages",messages)//emito al cliente los mensajes y productos
     client.emit("products",produc)
