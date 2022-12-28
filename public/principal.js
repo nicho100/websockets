@@ -1,4 +1,5 @@
 const socket=io()
+//recibo los mensajes y lo inserto en el html con el formato pedido
 socket.on("messages",data=>{
 let html=""
 data.forEach(message => {
@@ -9,8 +10,10 @@ document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`
 })
 
 let prod=[]
+//recibo los productos y lo inserto en el html con el formato pedido
 socket.on("product",(data)=>{
     let html=""
+    console.log(data)
     prod = data
     for(let i=0;i<prod.lenght;i++){
      html=html +`
@@ -20,14 +23,15 @@ socket.on("product",(data)=>{
     <td><img src=<${prod[i].thumbnail}></td>
     </tr>`   
     }
-   document.querySelector("#product").innerHTML=html 
+   document.getElementById("productContent").innerHTML=html 
 })
-
+//escucho el ultimo mensaje enviado por el servidor,le doy formato y lo agrego al html
 socket.on("messageAdded",(message)=>{
     let html=""
     html=`${html}
     <li><em>${message.email}</em>:${message.text}</li>`
 })
+//escucho el ultimo producto enviado por el servidor,le doy formato y lo agrego al html
 socket.on("productAdded",(product)=>{
     let html=""
     html=`${html}
@@ -37,7 +41,7 @@ socket.on("productAdded",(product)=>{
     <td><img src=<${product.thumbnail}></td>
     </tr>`
 })
-
+//creo una funcion para crear un objeto mensaje apartir del formulario de chat.ejs y lo emito al servidor
 function sendMessage(that){
     const message={
         email:that.email.value,
@@ -46,6 +50,7 @@ function sendMessage(that){
     }
     socket.emit("newMessage",message)
 }
+//creo una funcion para crear un objeto producto apartir del formulario de form.ejs y lo emito al servidor
 function addProduct(that){
     const product={
         name:that.name.value,
