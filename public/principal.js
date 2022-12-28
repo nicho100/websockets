@@ -6,7 +6,7 @@ data.forEach(message => {
  html= `${html}
 <li><b style="color:blue">${message.email}</b>[<em style="color:brown">${message.date}</em>]:<em style="color:green">${message.message}</em></li>`
 });
-document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`
+document.getElementById("chatContent").innerHTML=`<ul>${html}</ul>`//inserto en el archivo chat.ejs
 })
 
 let prod=[]
@@ -23,7 +23,7 @@ socket.on("product",(data)=>{
     <td><img src=<${prod[i].thumbnail}></td>
     </tr>`   
     }
-   document.getElementById("productContent").innerHTML=html 
+   document.getElementById("productContent").innerHTML=html //inserto en el archivo form.ejs pero creo que no funciona ya que se ejecuta el table.ejs
 })
 //escucho el ultimo mensaje enviado por el servidor,le doy formato y lo agrego al html
 socket.on("messageAdded",(message)=>{
